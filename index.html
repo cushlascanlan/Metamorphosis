@@ -39,37 +39,113 @@ tw-story {
 //# sourceMappingURL=imageMapResizer.map
 // Harlowe Macro Framework, by Chapel; version 1.0.2
 ;!function(){"use strict";var r={major:1,minor:0,patch:2},e=[r.major,r.minor,r.patch].join(".");r.semantic=e,r=Object.freeze(r);var t=$("tw-storydata"),a=Object.freeze({name:t.attr("name"),ifid:t.attr("ifid")}),n=t.attr("format-version"),o=n.split("."),i=Object.freeze({major:o[0],minor:o[1],patch:o[2],semantic:n});window.Harlowe=window.Harlowe||{},window.Harlowe=Object.assign(window.Harlowe,{framework:r,API_ACCESS:Object.freeze({MACROS:require("macros"),STATE:require("state"),CHANGER:require("datatypes/changercommand"),ENGINE:require("engine")}),engine:i,story:a})}(),function(){"use strict";function e(r){return"number"==typeof r||"boolean"==typeof r||"string"==typeof r||null===r||Array.isArray(r)&&r.every(e)||r instanceof Set&&Array.from(r).every(e)||r instanceof Map&&Array.from(r.values()).every(e)||_changer.isPrototypeOf(r)}window.Harlowe=Object.assign(window.Harlowe,{helpers:{isSerialisable:e,isSerializable:e,arrayify:function(r,e){if(r){var t=[].slice.call(r);return void 0!==e&&(t=t.slice(e)),t}},getPassageData:function(r){var e=$('tw-passagedata[name="'+r+'"]');if(e[0])return e}}})}(),function(){"use strict";var n=window.localStorage||!1,o=Harlowe.story.ifid+"-tw-storage";function r(){try{if(!n)throw new Error("storage is inaccessible");n.setItem(o,JSON.stringify({ifid:Harlowe.story.ifid}))}catch(r){console.warn(r)}}function i(r){try{var e;if(n)return e=JSON.parse(n.getItem(o)),r&&r&&"string"==typeof r?e[r]:e;throw new Error("storage is inaccessible")}catch(r){console.warn(r)}}null==i()&&r(),Harlowe.storage={clear:r,save:function(r,e){try{if(!r||"string"!=typeof r)throw new TypeError("cannot store values without a valid storage key");if(void 0===e)throw new TypeError("cannot store undefined values");var t={};if(t[r]=e,!n)throw new Error("storage is inaccessible");var a=i();Object.assign(a,t),n.setItem(o,JSON.stringify(a))}catch(r){console.warn(r)}},load:i,remove:function(r){try{if(!r||"string"!=typeof r)throw new TypeError("cannot store values without a valid storage key");if(!n)throw new Error("storage is inaccessible");var e=i();e.hasOwnProperty(r)&&(delete e[r],n.setItem(o,JSON.stringify(e)))}catch(r){console.warn(r)}}}}(),function(){"use strict";function a(r,e,t){if(!(this instanceof a))return new a(r,e,t);this.name=r||"unknown",this.args=e||[],this.data=t||{},this.type=t&&t.type||"basic",this.fn=t&&t.fn||"handler","changer"===this.type&&("handler"===this.fn?this.instance=t&&t.instance||null:this.descriptor=t&&t.descriptor||null)}a.create=function(r,e,t){if(!r||"string"!=typeof r||!r.trim())throw new TypeError("Invalid macro name.");return e&&e instanceof Array||(e=[]),t&&"object"==typeof t||(t={type:"basic",fn:"handler"}),new a(r,e,t)},Object.assign(a.prototype,{clone:function(){return a.create(this.name,this.args,this.data)},syntax:function(){return"("+this.name+":)"},error:function(r,e){var t="Error in the "+this.syntax()+" macro: "+r;return e&&alert(t),console.warn("HARLOWE CUSTOM MACRO ERROR -> ",t),new Error(r)},typeCheck:function(r){r&&r instanceof Array||(r=Harlowe.helpers.arrayify(arguments));var n=this,o=[];if(r.forEach(function(r,e){var t=e+1,a=[];"string"==typeof r&&("any"===(a=r.includes("|")?r.split("|").map(function(r){return r.trim().toLowerCase()}):[r.trim().toLowerCase()])[0]||a.some(function(r){return typeof n.args[e]===r})||o.push("argument "+t+" should be a(n) "+a.join(" or ")))}),o.length)return n.error(o.join("; "))}}),window.Harlowe=Object.assign(window.Harlowe,{MacroContext:a})}(),function(){"use strict";var c=Harlowe.API_ACCESS.MACROS,l=Harlowe.API_ACCESS.CHANGER;window.Harlowe=Object.assign(window.Harlowe||{},{macro:function(r,e,t){if(!r||"string"!=typeof r||!r.trim())throw new TypeError("Invalid macro name.");if(!e||"function"!=typeof e)throw new TypeError("Invalid macro handler.");var a,n,o,i,s;t&&"function"==typeof t?(o=r,i=e,s=t,c.addChanger(o,function(){var r=Harlowe.helpers.arrayify(arguments,1),e=l.create(o,r),t=Harlowe.MacroContext.create(o,r,{type:"changer",fn:"handler",instance:e});return i.apply(t,r),e},function(){var r=Harlowe.helpers.arrayify(arguments),e=r.shift(),t=Harlowe.MacroContext.create(o,r,{type:"changer",fn:"changer",descriptor:e});s.apply(t,r)},c.TypeSignature.zeroOrMore(c.TypeSignature.Any))):(a=r,n=e,c.add(a,function(){var r=Harlowe.helpers.arrayify(arguments,1),e=Harlowe.MacroContext.create(a,r,{type:"basic",fn:"handler"}),t=n.apply(e,r);return null==t?"":t},c.TypeSignature.zeroOrMore(c.TypeSignature.Any)))}})}(),function(){"use strict";var t=Harlowe.API_ACCESS.STATE,e=Harlowe.API_ACCESS.ENGINE;function a(){return t.passage}window.Harlowe=Object.assign(window.Harlowe||{},{passage:a,tags:function(r){r=r||a();try{var e=Harlowe.helpers.getPassageData(r).attr("tags");return e?e.split(" "):[]}catch(r){return console.warn(r.message),[]}},goto:function(r){return e.goToPassage(r)},variable:function(r,e){if("$"!==r[0])throw new Error('cannot access variable "'+r+'"');if(r=r.substr(1),void 0!==e){if(!Harlowe.helpers.isSerialisable(e))throw new Error('The value passed to variable "'+r+'" cannot be serialized.');t.variables[r]=e}return t.variables[r]},visited:function(r){return t.passageNameVisited(r||a())},hasVisited:function(r){return 0<t.passageNameVisited(r||a())},turns:function(){return t.pastLength}})}();
-// end Harlowe Macro Framework</script><tw-passagedata pid="1" name="OPEN" tags="" position="207,0" size="100,100">How it happens is this and if I’m lying, just know I’m a writer and writers and liars are basically the same thing. 
-I try to have sex and it hurts. I try again and again and again and again and this time it hurts so much I turn into a crab. So I decide I’m going to stop. I decide I’m going to be alone forever. I start to self-harm on top of all the other things that hurt in my life. Because it’s my fault. Because I’m sexually useless. Because this makes me unlovable. And then, I think, fuck it, that’s it. I’m so sick of being scared. I’m so sick of hating myself. Maybe I can still have fulfilling sexual experiences without penetration. Maybe I won’t have to be alone. I think about becoming a lesbian. Then I get scared of strap-ons. So I go on dates again. I fuck in different ways and then after fucking too much I think I get an STI. So I go to get it checked out and it’s not, for the record. Instead I get diagnosed with what I should have been diagnosed with when I was nineteen or maybe eighteen or maybe fuck it, sixteen and what I wish I could tell you is that this diagnosis split my shell open and I became exposed and raw and soft as a scallop or the back of newborn’s head, all neonatal and shit and ###//finally// 
-was ready to face the idea of commitment and self-love and it was so beautiful and poetic that you were left with this burning sense of poignancy and motivation—so much so that you finished this piece and went off to live a life so passionate it burst forth from you in long and blissful colour-coated stretches. But instead, 
-Every
-Single
+// end Harlowe Macro Framework</script><tw-passagedata pid="1" name="OPEN" tags="" position="207,0" size="100,100">(enchant: ?passage&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+[How it happens is this and if I’m lying, just know I’m a writer and writers and liars are basically the same thing. 
+
+I try to have sex and it hurts. I try again and again and again and again and this time it hurts so much I turn into a crab. 
+It&#39;s evolution, see. 
+Metamorphosis. 
+So I decide I’m going to stop. 
+I decide I’m going to be alone forever. 
+I start to self-harm on top of all the other things that hurt in my life. 
+Because I’m sexually useless.
+Because I&#39;m a crustacean.
+Because this makes me unlovable. 
+And then, I think, fuck it, that’s it. 
+I’m so sick of being scared. 
+I’m so sick of hating myself. 
+Maybe I can still have fulfilling sexual experiences without penetration.
+Maybe I won’t have to be alone. 
+I think about becoming a lesbian. 
+Then I get scared of strap-ons. 
+So I go on dates again.
+I fuck in different ways 
+and then after fucking too much I think I get an STI. 
+So I go to get it checked out and it’s not, for the record. 
+Instead I get diagnosed with what I should have been diagnosed with when I was nineteen or maybe eighteen or maybe 
+fuck it,
+//sixteen//
+and what I wish I could tell you is that this diagnosis split my shell open and I became exposed and raw and soft as a scallop or the back of newborn’s head, all neonatal and shit and 
+###//finally// 
+was ready to face the idea of commitment and self-love and it was so beautiful and poetic that you were left with this burning sense of poignancy and motivation— 
+so much so that you finished this piece and went off to live a life so passionate it burst forth from you in long and blissful colour-coated stretches. 
+
+
+But ]
+
+(align:&quot;&lt;==&quot;)[instead, ]
+
+
+(align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[Every]
+
+
+(align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[Sin]
+(align:&quot;&lt;==&quot;)+(box:&quot;=XX=&quot;)[gle]
+
 day 
-I am 
-un
-shelled
-Pick
-ed a
-part
-Frag
-Ment
-ed
-A raw, rank, bloodied number of cracks and cuts and slices and burns
+
+
+(align:&quot;&lt;==&quot;)+(box:&quot;===XXXXXXXXXX=======&quot;)[I ]   am 
+(align:&quot;&lt;==&quot;)+(box:&quot;=========XXXXXXXXXX=&quot;)[un]
+
+(align:&quot;&lt;==&quot;)+(box:&quot;==XXXXX===&quot;)[shell]  (align:&quot;&lt;==&quot;)+(box:&quot;=========XXXXXXXXXX=&quot;)[ed]
+
+    (align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[ Pick]
+(align:&quot;&lt;==&quot;)+(box:&quot;X=&quot;)[ed]    (align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[ a]
+
+(align:&quot;&lt;==&quot;)+(box:&quot;=X&quot;)[part]
+
+
+(align:&quot;&lt;==&quot;)+(box:&quot;===XXXXXXXXXX=======&quot;)[Frag]
+
+   (align:&quot;&lt;==&quot;)+(box:&quot;====XXXXX=&quot;)[Ment]
+
+(align:&quot;&lt;==&quot;)+(box:&quot;==XXXXX===&quot;)[ed]
+
+A raw, 
+
+rank, 
+
+bloodied number 
+
+of cracks 
+
+and cuts 
+
+and slices 
+
+and burns
+
 Like peeling back fingernails
+
 And I am so bloodied
+
 And I am so sore
+
 And I am so broken
+
 And I hate every bit about myself
+
 And I still don’t believe it’s not all my fault
+
 And I’m still not sure I’ll not be alone forever
+
 See a shell is //comfortable//, once you get used to it
+
 I never have to worry about not reaching the top shelf anymore
-And I can hide under rocks
+
+And I can hide under rocks.
+
 When I get really angry I don’t even have to talk about it
+
 I just blow fat spit bubbles and everyone goes running away in terror
+
 When anyone says anything stupid to me I snip off their heads with my big pincers 
+
 I’ve a bouquet of faces in my kitchen
+
 And whenever I am sad they tell me they understand why
+
 why
 ###//I am so angry//
 Why
