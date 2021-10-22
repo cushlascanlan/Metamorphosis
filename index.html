@@ -615,8 +615,7 @@ In the poem, he asks, why? Why did I do that to him?]&lt;nametag|
 (font: &quot;arial narrow&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[“...Women may feel the need to pretend that they are self-loving, to assert power and confidence to the outside world, and as a consequence they feel psychologically conflicted and disengaged from their true being. Shamed by the feeling that they can never let anyone know who they really are, [[they may choose isolation and aloneness for fear of being unmasked-&gt;Zoea 1]].”
 bell hooks, All About Love: New Visions, p.60]
 
-(align:&quot;==&gt;&quot;)+(box:&quot;=X&quot;)[And I think back to the night that I went home after that nine-hour date, when all I could think about was how badly I was wasting //his// time and I wonder if it was then that I began my final [[morph-&gt;Eggs]].]&lt;nametag|</tw-passagedata><tw-passagedata pid="9" name="Zoea 4" tags="" position="797,460" size="100,100">(enchant:?page,(text-colour:black)+(background:(gradient: 0, 0,#ffffff,0,#ffdeeb,1,#e3fafc)))
-
+(align:&quot;==&gt;&quot;)+(box:&quot;=X&quot;)[And I think back to the night that I went home after that nine-hour date, when all I could think about was how badly I was wasting //his// time and I wonder if it was then that I began my final [[morph-&gt;Eggs]].]&lt;nametag|</tw-passagedata><tw-passagedata pid="9" name="Zoea 4" tags="" position="797,460" size="100,100">
 ##//Fig. 5 Zoea 4(mouseover-replace:&quot;Zoea 4&quot;)[Emotional Response
 Misery: &#39;I&#39;m not a real woman&#39;]//
 
@@ -627,14 +626,25 @@ The doctor tells me I shouldn’t worry, that I’m in the wrong age bracket to 
 
 I am not relieved. 
 
-At one point I sit in the Imaging service clinic in a cold hallway with nothing but a modesty gown, the artificial lights rubbing against my bare skin like cool rubber gloves. 
+At one point I sit in the Imaging Service Clinic in a cold hallway with nothing but a modesty gown, the artificial lights rubbing against my bare skin like cool rubber gloves. 
 The lighting and blue tiles make me feel like I’m in an aquarium. 
 I suppose I should be in a fish tank.
 
 To pass the time I let my hypochondria tango away with my thoughts and tap my ten legs against the blue lino-ground in succession.
 
-Tap, tap, tap, tap, tap. Pause. Tap, tap, tap, tap, tap. Pause.
+{
+(set: $stopCycle to 0)
 
+(live: 1s)[
+(if: $stopCycle is 10)[Tap. (stop:)]
+(else: )[
+(set: $stopCycle to it + 1)
+(css: &quot;position: absolute; left: &quot; + (string: 40 * $stopCycle)
++ &quot;px&quot; )[Tap]
+ ]
+ ]
+ }
+ 
 My hypochondria salsas with the idea of a mastectomy. 
 
 Even if the lump is benign, there’s a chance it could become cancerous and wouldn’t it be safer to cut off my breast now? 
@@ -1215,40 +1225,37 @@ Just once I want to be held and to feel it.</tw-passagedata><tw-passagedata pid=
 (click: ?band3)[(replace: ?band3)[ [olive oil?]&lt;band4|]]
 (click: ?band4)[(replace: ?band4)[ [oils? Only with like long term partners, of course.]&lt;band5|]]
 (click: ?band5)[(replace: ?band5)[ [Vush&#39;s lube?]&lt;band6|]]</tw-passagedata><tw-passagedata pid="23" name="Causes" tags="" position="494,727" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
-##ACTUAL CAUSES OF VAGINISMUS:
+####[ ACTUAL CAUSES OF VAGINISMUS:
 
 [* medical conditions such as recurrent urinary tract infections (UTIs), yeast infections (thrush), chronic pain syndromes or endometriosis]&lt;band1|
-
-
-##Furthermore, there are TWO TYPES OF VAGINISMUS: 
-
+####Furthermore, there are TWO TYPES OF VAGINISMUS: 
 
 * &#39;&#39;Primary&#39;&#39;: (click-replace: &quot;Primary:&quot;) [ when complete (painless) vaginal penetration has never been achieved]
 
 * &#39;&#39;Secondary&#39;&#39;: (click-replace: &quot;Secondary:&quot;)[when penetration in the past has been achieved, but is no longer possible]
 
-
-Here is an excellent site on Vaginismus AND Dyspareunia (Painful Sex):
-
-(link:&quot;Vaginismus&quot;)[(goto-url: &#39;https://www.jeanhailes.org.au/health-a-z/vulva-vagina-ovaries-uterus/vulval-vaginal-conditions/vaginismus&#39;)]
-
-(link: &quot;Dyspareunia&quot;)[(goto-url: &#39;https://www.jeanhailes.org.au/health-a-z/sex-sexual-health/painful-sex-dyspareunia &#39;)]
-
-
+Here is a really  excellent site on (link: &quot;Vaginismus:&quot;)[(goto-url: &#39;https://www.jeanhailes.org.au/health-a-z/sex-sexual-health/painful-sex-dyspareunia &#39;)]
 
 
 And just, //finally//, 
-It&#39;s really easy to fix. I swear.
-So don&#39;t wait for the [[metamorphosis-&gt;Passage Image]] . 
-Speak up. 
-And maybe tomorrow, sex //will// be good again.]
+
+It&#39;s really easy to fix. 
+
+I swear.
+
+Don&#39;t wait for the [[metamorphosis-&gt;Passage Image]]. 
+
+Speak up.
+
+And maybe tomorrow, sex //will// be good again.
 
 (click: ?band1)[(replace: ?band1)[ [* trauma associated with childbirth]&lt;band2|]]
 (click: ?band2)[(replace: ?band2)[ [* previous painful pelvic examination]&lt;band3|]]
 (click: ?band3)[(replace: ?band3)[ [* previous painful or unpleasant sex]&lt;band4|]]
 (click: ?band4)[(replace: ?band4)[ [* negative stigmas and ideas surrounding sex (particularly so for those brought up in religious environments associated with sexual repression)]&lt;band5|]]
 (click: ?band5)[(replace: ?band5)[ [* previous sexual assault or rape]&lt;band6|]]
-(click: ?band6)[(replace: ?band6)[ [* overstimulation of the pelvic floor due to over-exercise or bladder dysfunction]&lt;band7|]]</tw-passagedata></tw-storydata>
+(click: ?band6)[(replace: ?band6)[ [* overstimulation of the pelvic floor due to over-exercise or bladder dysfunction]&lt;band7|]]
+]</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">"use strict";var _slicedToArray=function(){return function(e,t){if(Array.isArray(e))return e;if(Symbol.iterator in Object(e))return function(e,t){var n=[],r=!0,i=!1,a=void 0;try{for(var o,s=e[Symbol.iterator]();!(r=(o=s.next()).done)&&(n.push(o.value),!t||n.length!==t);r=!0);}catch(e){i=!0,a=e}finally{try{!r&&s.return&&s.return()}finally{if(i)throw a}}return n}(e,t);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function _defineProperty(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function _toConsumableArray(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}!function(){
 /**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
