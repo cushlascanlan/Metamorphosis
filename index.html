@@ -13,11 +13,6 @@
   width: 100%;
 }
 
-tw-story{
- background-image:url("./img/crabmap.jpeg");
- background-size:100%;
- background-repeat:none;
-}
 
 tw-story[tags~="Background"]{
   background-image:url("./img/clam.jpg");
@@ -43,11 +38,7 @@ tw-story[tags~="Vulva"]{
   background-repeat:none;
   }
 
-tw-story[tags~="back"]{
-  background-image:url("./img/background.jpg");
-  background-size: 100%;
-  background-repeat:none;
-  }
+
 
 tw-story {
    text-align: left; 
@@ -69,67 +60,79 @@ tw-story {
 //# sourceMappingURL=imageMapResizer.map
 // Harlowe Macro Framework, by Chapel; version 1.0.2
 ;!function(){"use strict";var r={major:1,minor:0,patch:2},e=[r.major,r.minor,r.patch].join(".");r.semantic=e,r=Object.freeze(r);var t=$("tw-storydata"),a=Object.freeze({name:t.attr("name"),ifid:t.attr("ifid")}),n=t.attr("format-version"),o=n.split("."),i=Object.freeze({major:o[0],minor:o[1],patch:o[2],semantic:n});window.Harlowe=window.Harlowe||{},window.Harlowe=Object.assign(window.Harlowe,{framework:r,API_ACCESS:Object.freeze({MACROS:require("macros"),STATE:require("state"),CHANGER:require("datatypes/changercommand"),ENGINE:require("engine")}),engine:i,story:a})}(),function(){"use strict";function e(r){return"number"==typeof r||"boolean"==typeof r||"string"==typeof r||null===r||Array.isArray(r)&&r.every(e)||r instanceof Set&&Array.from(r).every(e)||r instanceof Map&&Array.from(r.values()).every(e)||_changer.isPrototypeOf(r)}window.Harlowe=Object.assign(window.Harlowe,{helpers:{isSerialisable:e,isSerializable:e,arrayify:function(r,e){if(r){var t=[].slice.call(r);return void 0!==e&&(t=t.slice(e)),t}},getPassageData:function(r){var e=$('tw-passagedata[name="'+r+'"]');if(e[0])return e}}})}(),function(){"use strict";var n=window.localStorage||!1,o=Harlowe.story.ifid+"-tw-storage";function r(){try{if(!n)throw new Error("storage is inaccessible");n.setItem(o,JSON.stringify({ifid:Harlowe.story.ifid}))}catch(r){console.warn(r)}}function i(r){try{var e;if(n)return e=JSON.parse(n.getItem(o)),r&&r&&"string"==typeof r?e[r]:e;throw new Error("storage is inaccessible")}catch(r){console.warn(r)}}null==i()&&r(),Harlowe.storage={clear:r,save:function(r,e){try{if(!r||"string"!=typeof r)throw new TypeError("cannot store values without a valid storage key");if(void 0===e)throw new TypeError("cannot store undefined values");var t={};if(t[r]=e,!n)throw new Error("storage is inaccessible");var a=i();Object.assign(a,t),n.setItem(o,JSON.stringify(a))}catch(r){console.warn(r)}},load:i,remove:function(r){try{if(!r||"string"!=typeof r)throw new TypeError("cannot store values without a valid storage key");if(!n)throw new Error("storage is inaccessible");var e=i();e.hasOwnProperty(r)&&(delete e[r],n.setItem(o,JSON.stringify(e)))}catch(r){console.warn(r)}}}}(),function(){"use strict";function a(r,e,t){if(!(this instanceof a))return new a(r,e,t);this.name=r||"unknown",this.args=e||[],this.data=t||{},this.type=t&&t.type||"basic",this.fn=t&&t.fn||"handler","changer"===this.type&&("handler"===this.fn?this.instance=t&&t.instance||null:this.descriptor=t&&t.descriptor||null)}a.create=function(r,e,t){if(!r||"string"!=typeof r||!r.trim())throw new TypeError("Invalid macro name.");return e&&e instanceof Array||(e=[]),t&&"object"==typeof t||(t={type:"basic",fn:"handler"}),new a(r,e,t)},Object.assign(a.prototype,{clone:function(){return a.create(this.name,this.args,this.data)},syntax:function(){return"("+this.name+":)"},error:function(r,e){var t="Error in the "+this.syntax()+" macro: "+r;return e&&alert(t),console.warn("HARLOWE CUSTOM MACRO ERROR -> ",t),new Error(r)},typeCheck:function(r){r&&r instanceof Array||(r=Harlowe.helpers.arrayify(arguments));var n=this,o=[];if(r.forEach(function(r,e){var t=e+1,a=[];"string"==typeof r&&("any"===(a=r.includes("|")?r.split("|").map(function(r){return r.trim().toLowerCase()}):[r.trim().toLowerCase()])[0]||a.some(function(r){return typeof n.args[e]===r})||o.push("argument "+t+" should be a(n) "+a.join(" or ")))}),o.length)return n.error(o.join("; "))}}),window.Harlowe=Object.assign(window.Harlowe,{MacroContext:a})}(),function(){"use strict";var c=Harlowe.API_ACCESS.MACROS,l=Harlowe.API_ACCESS.CHANGER;window.Harlowe=Object.assign(window.Harlowe||{},{macro:function(r,e,t){if(!r||"string"!=typeof r||!r.trim())throw new TypeError("Invalid macro name.");if(!e||"function"!=typeof e)throw new TypeError("Invalid macro handler.");var a,n,o,i,s;t&&"function"==typeof t?(o=r,i=e,s=t,c.addChanger(o,function(){var r=Harlowe.helpers.arrayify(arguments,1),e=l.create(o,r),t=Harlowe.MacroContext.create(o,r,{type:"changer",fn:"handler",instance:e});return i.apply(t,r),e},function(){var r=Harlowe.helpers.arrayify(arguments),e=r.shift(),t=Harlowe.MacroContext.create(o,r,{type:"changer",fn:"changer",descriptor:e});s.apply(t,r)},c.TypeSignature.zeroOrMore(c.TypeSignature.Any))):(a=r,n=e,c.add(a,function(){var r=Harlowe.helpers.arrayify(arguments,1),e=Harlowe.MacroContext.create(a,r,{type:"basic",fn:"handler"}),t=n.apply(e,r);return null==t?"":t},c.TypeSignature.zeroOrMore(c.TypeSignature.Any)))}})}(),function(){"use strict";var t=Harlowe.API_ACCESS.STATE,e=Harlowe.API_ACCESS.ENGINE;function a(){return t.passage}window.Harlowe=Object.assign(window.Harlowe||{},{passage:a,tags:function(r){r=r||a();try{var e=Harlowe.helpers.getPassageData(r).attr("tags");return e?e.split(" "):[]}catch(r){return console.warn(r.message),[]}},goto:function(r){return e.goToPassage(r)},variable:function(r,e){if("$"!==r[0])throw new Error('cannot access variable "'+r+'"');if(r=r.substr(1),void 0!==e){if(!Harlowe.helpers.isSerialisable(e))throw new Error('The value passed to variable "'+r+'" cannot be serialized.');t.variables[r]=e}return t.variables[r]},visited:function(r){return t.passageNameVisited(r||a())},hasVisited:function(r){return 0<t.passageNameVisited(r||a())},turns:function(){return t.pastLength}})}();
-// end Harlowe Macro Framework</script><tw-passagedata pid="1" name="OPEN" tags="back" position="322,4" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+// end Harlowe Macro Framework</script><tw-passagedata pid="1" name="OPEN" tags="" position="322,4" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
 [How it happens is this and if you think I’m lying, just know I’m a writer and writers and liars are basically the same thing.
 
 I try to have sex and it hurts.
 
 I try again and again and again and again and this time it hurts so much I turn into a crab. 
+
 It&#39;s evolution, see. 
+
 Metamorphosis. 
 
 So I decide I’m going to stop. 
 
-I decide I’m going to be alone forever. 
+I decide it&#39;s fine to be alone forever. 
 
 I start to self-harm on top of all the other things that hurt. 
+See if I can just cut myself down to some nibble sized pieces, rearrange my fragments and make that floor a little looser and my thighs a little smaller maybe then someone will love me. 
+
+(align:&quot;==&gt;&quot;)+(box:&quot;=========XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=&quot;)[But of course, they won&#39;t.]
+
 Because I&#39;m a crusty, crusty, crustacean.
+
 Because I&#39;m sexually impotent.
-Because this makes me unlovable. 
+
+Because I am //so//O//O//oO//oO//Oooooo//O//OOoo//oOO//oOoOO//OOOO//Ooo//o//Oo unloveable. 
+
 
 And then,
 
 I think, 
 
-fuck it,
-
-that’s it. 
-
-I’m sick of being //so// alone. 
-I’m sick of this just being a //me// problem.
+fuck it.
 
 Maybe I can still have fulfilling sexual experiences without penetration.
 
 Maybe I won’t have to be alone. 
 
-Maybe I should have a (mouseover-replace:&quot;//lot// more faith in men.&quot;)[
+Maybe I should have a //lot// more faith in men.
 
-I do think about becoming a lesbian. 
-But then I get scared of strap-ons.]
 
 So I go on dates again.
 
+
 I fuck in different ways 
 and with different people
+and without penetration
+
 and then after fucking too much I think I get an STI. 
 
-So I go to get it checked out and it’s not, 
-for the record. 
+So I go to get it checked out
 
-Instead I get diagnosed with what I should have been diagnosed with when I was nineteen or maybe eighteen or maybe 
-fuck it,
-sixteen
-and what I wish I could tell you is that this diagnosis split my shell open and I became exposed and raw and soft as a scallop or the back of a newborn’s head, all neonatal and shit 
+and it’s not, for the record. 
+
+Instead I get diagnosed with what I should have been diagnosed with when I was nineteen or maybe eighteen or maybe sixteen, or maybe really fourteen,
+
+and what I wish I could tell you is that this diagnosis split my shell //open//, 
+and I became as exposed and raw and soft as a scallop or the back of a newborn’s head, 
+all neonatal and shit 
 
 ##//finally// 
 
-ready to face the idea of commitment and self-love 
-And it was all so beautiful 
-and it was all so poetic 
-and you were left with such a burning sense of poignancy and motivation 
-to go off and live a life so passionate
-so fulfilling
+ready to face the idea of commitment and self-love. 
+
+//Oh how beautiful//
+
+//Oh how poetic //
+
+You&#39;d cry,
+left with such a burning sense of poignancy and motivation 
+to go out and live a life so passionate,
+so fulfilling,
 it burst forth from you in long and blissful colour-coated stretches.
+
 But 
 
 instead, 
@@ -138,36 +141,94 @@ instead,
 
 (align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[ev]
 
+
+
+
 (align:&quot;&lt;==&quot;)+(box:&quot;=X&quot;)[ery]
 
+
+
+
 (align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[sin]
+
+
+
+
 (align:&quot;&lt;==&quot;)+(box:&quot;=XX=&quot;)[gle]
+
+
+
+
 
 
 day 
 
 
 
+
+
+
+
 (align:&quot;&lt;==&quot;)+(box:&quot;===XXXXXXXXXX=======&quot;)[I ]   am 
+
+
+
+
 (align:&quot;&lt;==&quot;)+(box:&quot;=========XXXXXXXXXX=&quot;)[un]
+
+
+
+
 
 
 (align:&quot;&lt;==&quot;)+(box:&quot;==XXXXX===&quot;)[shell]  (align:&quot;&lt;==&quot;)+(box:&quot;=========XXXXXXXXXX=&quot;)[ed]
 
 
+
+
+
+
     (align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[ pick]
-(align:&quot;&lt;==&quot;)+(box:&quot;X=&quot;)[ed]    (align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[ a]
+	
+	
+	
+	
+(align:&quot;&lt;==&quot;)+(box:&quot;X=&quot;)[ed]    
+
+
+
+
+(align:&quot;&lt;==&quot;)+(box:&quot;=XXXXX====&quot;)[ a]
+
+
+
+
 
 (align:&quot;&lt;==&quot;)+(box:&quot;=X&quot;)[part]
+
+
+
+
 
 
 (align:&quot;&lt;==&quot;)+(box:&quot;===XXXXXXXXXX=======&quot;)[frag]
 
 
+
+
+
+
    (align:&quot;&lt;==&quot;)+(box:&quot;====XXXXX=&quot;)[ment]
 
 
+
+
 (align:&quot;&lt;==&quot;)+(box:&quot;==XXXXX===&quot;)[ed]
+
+
+
+
+
 
 
 A raw, 
@@ -184,17 +245,19 @@ and slices
 
 and burns
 
-It&#39;s like peeling back fingernails
+
+
+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;===XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=======&quot;)[It&#39;s like peeling back fingernails]
 
 
 
-And I am so bloodied
+And I am so bloody
 
 And I am so sore
 
 And I am so broken
 
-And I hate every bit about myself
+And I hate every bit about myself 
 
 
 And I still don’t believe it’s not all my fault
@@ -203,74 +266,126 @@ And I still don’t believe it’s not all my fault
 And I’m still not sure I’ll not be alone forever
 
 
+
 See a shell is //comfortable//, once you get used to it
+
 
 
 I never have to worry about not reaching the top shelf anymore
 
 
+
 And I can hide under rocks.
+
+
+
+
 When I get really angry I don’t even have to talk about it
+
+
 
 
 I just blow fat spit bubbles and everyone goes running away in terror
 
 
+
+
+
 When anyone says anything stupid to me I snip off their heads with my big pincers 
+
+
+
+
 I’ve a bouquet of faces in my kitchen
 
 
+
 And whenever I am sad,
+
+
 Which is more often than not,
-they tell me //they// understand 
+
+
+they tell me //they understand//
+
+
+
+
 
 why
 
-why
+
+
+
+
 
 why
+
+
+
+
+
+
+
+why
+
+
 ###//I am so angry//
+
+
 Why
+
+
 ##//I am in so much pain//
+
+
 Why
+
+
 #//I am // NOT // crying//
 
 
-(link-goto:&quot;--&gt;&quot;,&quot;Passage Image&quot;) ]&lt;nametag|</tw-passagedata><tw-passagedata pid="2" name="Divulge" tags="" position="212,281" size="100,100">I have a friend who was trying to divulge a traumatic memory to me about her father and every time she tried to tell the story, most of which I already knew from when were drunk one time off too many martinis, her tongue shrunk and  swelled and she stuttered and stammered and sat there mute for long periods of time.
-“I don’t know why this is so hard for me to get out.” She’d said.
-And I looked at her and said, I understand.
-Not because I thought she would appreciate that, but because I genuinely did.
-In my first therapy session after my vaginismus diagnosis, my tongue decided to backflip and cartwheel and tumble-turn between my teeth and with watering eyes I could only move my head when the therapist asked who I had told about this and then, after that initial shake, she said no one? So you’ve been alone with this for the entire time?
-And as I cried I’d apologised and tried to say, it’s not so much sadness, I’m just angry. [[I’m so angry more than anything.-&gt;Zoeba 3.3]]
-</tw-passagedata><tw-passagedata pid="3" name="Letting Go" tags="" position="364,436" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
-[[THINGS I SHOULD LET GO OF:-&gt;Juvenile]]
+(link-goto:&quot;--&gt;&quot;,&quot;Passage Image&quot;) ]&lt;nametag|</tw-passagedata><tw-passagedata pid="2" name="Divulge" tags="" position="216,225" size="100,100">I have a friend who was trying to divulge a traumatic memory to me about her father and every time she tried to tell the story, most of which I already knew from when were drunk one time off too many martinis, her tongue shrunk and  swelled and she stuttered and stammered and sat there mute for long periods of time.
+I don’t know why this is so hard for me to get out, she’d muttered.
+And as I looked up at her I said, I understand.
+Not because I thought she&#39;d appreciate it, but because I genuinely did.
+In my first therapy session after my vaginismus diagnosis, my tongue decided to backflip and cartwheel and tumble-turn between my teeth and with watering eyes I could only move my head when the therapist asked who I had told about this and then, after that initial shake, she said, No one? So you’ve been alone with this for the entire time?
+And as I cried I’d apologised and tried to say, it’s not so much sadness, I’m just angry. 
+[[I’m just so angry more than anything.-&gt;Zoeba 3.2]]
+</tw-passagedata><tw-passagedata pid="3" name="Letting Go" tags="" position="323,513" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+[[THINGS I SHOULD LET GO OF:-&gt;Adult]]
 
-[-My mother wound
+[-Those McDonald&#39;s monopoly tickets I left in my purse from at least two years ago 
+(I won a cheeseburger!!)
+
+-[[My anxiety-&gt;Juvenile]]
+
+-Those really old concert tickets (you know the ones that have rotted with time and booze stains?)
+
+-My mother wound
+
+-That weird memory I have of my [[father-&gt;Divulge]] stabbing me with a fork that out of context sounds awful and with context isn’t too much better
+
+-My father wound
 
 -[[The many things people have said to me about vaginismus-&gt;Vaginismus]]
 
--The weird memory I have of my father stabbing me with a fork that out of context sounds awful and with context isn’t too much better
-
--Daddy issues
-
 -Alcoholism
 
--Family trauma
-
--[[My anxiety-&gt;Adult]]
-
--That boy I went on a date with, who moved to Merri Creek so now I can’t go on my daily walks without feeling like a stalker
-
--[[My fear of people perceiving me-&gt;Identity]]
-
--The resentment I have toward people who suddenly decide to become writers and then do so, successfully, without years of procrastination and pain and questioning and self-loathing
+-My fear of people perceiving me
 
 -The barista who asked for my name and then said, No, your real name- after I’d told him my name
 
+-//That// bag of four leaf lettuce
+
+-The resentment I have toward people who suddenly decide to become writers and then do so, successfully, without years of procrastination and pain and questioning and self-loathing
+
 -‘[[Better Than Sex’ Mascara-&gt;Better Than Sex]]
 
--My black corduroy jacket]&lt;nametag|
-</tw-passagedata><tw-passagedata pid="4" name="Better Than Sex" tags="betterthansex" position="578,614" size="100,100">(align:&quot;&lt;==&quot;)+(box:&quot;XX===&quot;)[(enchant:?page,(text-colour:black))Bella comes back from Sydney with gifts.
+-My black corduroy jacket
+
+-[[//That stupid Doctor//-&gt;Zoeba 3.2]]
+]&lt;nametag|</tw-passagedata><tw-passagedata pid="4" name="Better Than Sex" tags="betterthansex" position="468,579" size="100,100">(align:&quot;&lt;==&quot;)+(box:&quot;XX===&quot;)[(enchant:?page,(text-colour:black))Bella comes back from Sydney with gifts.
 
 For Jess she has a Fenty skin product, for Cooper a new face wash. 
 
@@ -290,14 +405,14 @@ I cry in front of him for maybe
 only the second time 
 in our years-long 
 friendship.]
-</tw-passagedata><tw-passagedata pid="5" name="Bleeding Between Periods" tags="" position="52,549" size="100,100">I’m bleeding between periods. 
+</tw-passagedata><tw-passagedata pid="5" name="Bleeding Between Periods" tags="" position="59,436" size="100,100">I’m bleeding between periods. 
 I have had no physical pain since the night of the metamorphosis but I’ve been listening to my ‘blue heart’ playlist too often.
 Maybe it’s from the remnants of the shift. 
 Maybe it’s not vaginal but completely internal. I’m scared I have cancer.
 When I wake up in the morning there is a clump of mucus at the back of my throat and when I navigate my foreign body into the bathroom to spit it up, it’s rust-coloured in our yellow sink. 
 I mention it at the dinner table, which sounds inappropriate but it’s after four bottles of wine split between three and Cooper says, ‘Well is it because of your physio exercises?’ And I remember a conversation with him years ago about [[hymens-&gt;Meaning]] and how at the time, I took his word for it that they were something that did, in fact, ‘break’, and now as I look at him I still don’t have the energy to [[//explain how the fuck a vulva works// -&gt;How A Vulva Works]].
 </tw-passagedata><tw-passagedata pid="6" name="How A Vulva Works" tags="Vulva" position="186,532" size="100,100">(enchant:?passage,(text-colour:black))
-&#39;&#39;This is how a vulva is. I have drawn this diagram. You may show it to your friends if you want. You can bring it out at dinner parties. I recommend doing this only after four bottles of wine and no other substances. Maybe JJ. That floaty air-filled burst of blood beneath your brains works well when you look at it. Makes everything go spinny. [[Relaxes your arsehole.-&gt;Megalopod]] A dream for vaginismus sufferers.&#39;&#39; 
+&#39;&#39;This is how a vulva is. I have drawn this diagram. You may show it to your friends if you want. You can bring it out at dinner parties. I recommend doing this only after four bottles of wine and no other substances. Maybe JJ. That floaty air-filled burst of blood beneath your brains works well when you look at it. Makes everything go spinny. [[Relaxes your arsehole.-&gt;Megalopa]] A dream for vaginismus sufferers.&#39;&#39; 
 
 
 
@@ -316,53 +431,24 @@ Fact.
 I used to hate science for this reason.
 But something in me has shifted. 
 Reason is comfortable when it comes to the body and not the mind. 
-This is why I can be a self-proclaimed hypochondriac.&#39;&#39; ]</tw-passagedata><tw-passagedata pid="7" name="Eggs" tags="" position="761,22" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
-[Last year a boy writes me a poem and says, //I really did fall in love with you, Cush// and it scares me in a way I don’t know how to explain.]&lt;nametag|
-(mouseover-replace: &quot;[Last year a boy writes me a poem and says, //I really did fall in love with you, Cush// and it scares me in a way I don’t know how to explain.]&lt;nametag|&quot;) [
-(font:&quot;Calibri&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;============XXXXXXXXXX===&quot;)[//“With pain during penetrative intercourse it is impossible to relax and instead your tension and anxiety increase.You are always waiting for the pain. You may also find that you become increasingly unable to relax and respond normally to any moments of intimacy.//]]
+This is why I can be a self-proclaimed hypochondriac.&#39;&#39; ]</tw-passagedata><tw-passagedata pid="7" name="Eggs" tags="Background" position="730,14" size="100,100">##//Fig.1 Eggs (mouseover-replace:&quot;Eggs&quot;)[Attempt to have intercourse]//
 
-[The words feel like they&#39;ve been coercively sewn into my skin and every time I try to pull them out the derma beneath feels raw and plucked of feathers; the half-moons beneath my fingernails caked in blood and dirty.]&lt;nametag|
-(font: &quot;calibri&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[//A gentle caress of the arm or a simple cuddle may cause you to physically or emotionally withdraw from your partner. 
-This may be due to fear of any simple touch now leading inevitably to sex and pain. 
-So now you no longer enjoy any form of touch. 
-This adds further to the guilt and resentment and fuels the vicious cycle.”// ]
-
-
-[When we hang out, I am so conscious of how it will end. I am so conscious that I will be unable to give him what he wants.]&lt;nametag| 
-
-(align:&quot;==&gt;&quot;)+(box:&quot;=X&quot;)[//“It&#39;s when you have a very tight pelvic floor and... pushing a tampon, finger or penis is very difficult and it feels like burning, razor blade like symptoms in the vagina. One in five women will experience vaginismus. It’s extremely common, it’s extremely easy to fix.” //]
-
-
-[I spend nine hours listening to him talk about getting a Star Wars tattoo on his thigh and I tap my knee with my left hand in an attempt to stay present. We see each other for around three months and it’s the longest I’ve ever really kept it up. I break it off the only way I know how, cruelly and silently.]&lt;nametag|
-
-
-(align:&quot;==&gt;&quot;)[//“How isolating is it for the women who come in to this public space and there is no conversation about it?”//
-
-
- //“It’s extremely isolating. They all think they’re alone, and when I tell them one in five women have it, they go, ‘what?’ Because often they’ve gone to see a GP who’s not diagnosed it properly and maybe they’ve gone five years with it, maybe they’ve gone fifteen years with it and maybe their GP’s said, ‘Just have a glass of wine and relax and you’ll be fine’. Or they’ve gone and got a PAP smear and the PAP smear has been fine, and they can put a finger or a vibrator in themselves, but as soon as their partner comes close to them, then their pelvic floor tightens. So it is a psychological and biological condition...And it’s really, really sad because it’s super easy to fix.”//]
-
-[After he sends me the poem, little over half a year later, I reread our previous messages from where I’d stopped responding to him and they seem so natural, so casual— no sign of the days-long debate of what I’d reply to him with, the anxiety that had so physically knotted my stomach and made my mouth dry. 
-In the poem, he asks, why? Why had I done that to him?]&lt;nametag|
-
-//‘To complicate matters, women may feel the need to pretend that they are self-loving, to assert power and confidence to the outside world, and as a consequence they feel psychologically conflicted and disengaged from their true being. Shamed by the feeling that they can never let anyone know who they really are, they may choose isolation and aloneness for fear of being unmasked.’ Pg60//]&lt;nametag|
-
-(align:&quot;==&gt;&quot;)+(box:&quot;=X&quot;)[And I think back to the night that I went home after that nine-hour date, after I still hadn’t yet kissed him, when I looked so angrily at the white stars that bled down from the cobalt sky as if their very existence was what was to be held accountable for my shortcomings and I wonder if it was that night that I began my final [[morph-&gt;Zoeba]].]&lt;nametag|
-hello
-(mouseover-replace:&quot;hello&quot;) [rar]</tw-passagedata><tw-passagedata pid="8" name="Zoeba" tags="Background" position="844,151" size="100,100">(align:&quot;&lt;==&quot;)+(box:&quot;=XXXX=&quot;)[Most bruises begin with a bump to the body and it isn’t until much later we notice the mould-coloured evidence of that initial hurt.
+(align:&quot;&lt;==&quot;)+(box:&quot;===XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=======&quot;)[Most bruises begin with a bump to the body and it isn’t until much later we notice the mould-coloured evidence of that initial hurt.
 During a metamorphosis however, the body becomes the bruise. 
 The pain begins, deep inside, not necessarily a stinging, but a pulsing, a blossoming, an expanding and above all, a repelling. A rejection. 
 It starts gently; veins swell slowly, singing, expanding, a chorus of webbed voices, bones cracking, splintering, threading themselves back together from outside your skin. The most uncomfortable is the shifting of your internal organs, more so the way the mouth, the oesophagus, the linings of the stomach, rearrange and twist into new contortions. 
-The debilitating ache of a period cramp is vaguely reminiscent of the bruising; that same nausea nestles itself in the tight space between your two lungs, leaving your breath to rip its way through the bars of your ribs and after those brief minutes have stretched on for what feels like hours, you are finally left, blood, spittle and teeth bites on lips, a shell of your former self. Tough, amorphous, lithogenous. 
-I tell myself that the last couple of times were different. [[Maybe that Doctor was right.-&gt;Zoeba 3.3]] I’m relaxed, I’m turned on. I really like this guy. I bring my own lube. Water based, natural; allergies ruled out.
-When he finishes my body’s left crumpled, everything wrong, //erroneous//. I turn away from him to sleep, pretend to be nonchalant. //I’m not crying.// Surreptitiously, I check for blood between my thighs and when I see there’s nothing there, I close my eyes and will for sleep, trembling and soft. He curls himself against my back like a little dried leaf and the touch alone makes me shiver, his arms, like two long blades, press deep into my back.
+The debilitating ache of a period cramp is vaguely reminiscent of the bruising; that same nausea nestles itself in the tight space between your two lungs, leaving your breath to rip its way through the bars of your ribs and after those brief minutes have stretched on for what feels like hours, you are finally left, blood, spittle and teeth bites on lips, a shell of your former self.  
+I tell myself that the last couple of times were different. [[Maybe that Doctor was right.-&gt;Zoeba 3.2]] I’m relaxed, I’m turned on. I really like this guy. I bring my own lube. Water based, natural; [[allergies ruled out-&gt;Vaginismus]].
+When he finishes, my body’s left crumpled, everything wrong, //erroneous//. I turn away from him to sleep, pretend to be nonchalant. //I’m// NOT //crying.// 
+Surreptitiously, I check for blood between my thighs and when I see there’s nothing there, I close my eyes and will for sleep, trembling and soft. He curls himself against my back like a little dried leaf and the touch alone makes me //sick//, his arms, like two long blades, press deep into my back.
 I must have finally fallen asleep because the pain echoes back through my body so badly my eyes open to darkness, my ears feel wet and full. I’m not in my own home so from the deep pit of my stomach the panic begins to pile and clamber up on top of itself until it’s sitting dry and furious at the back of my throat. 
 You’re overreacting, I tell myself, my thoughts so loud in the dark I question whether I’ve accidentally spoken them. I touch my ears and try to scoop the water out with my fingers but there is so much, even as I get up and stand next to the sleeping figure in the bed, my head upright, the fluid doesn’t seem to stop.
 I check my phone from where it lies face down on the bedside table; 3:34am. Making sure he’s still asleep, I wobble to the bathroom, tenderly shut the door and turn on the light. 
 In the mirror above the bathroom sink behind the toothpaste spots, my eyes are dark. Blood, on both sides, drips down my head and onto my cheeks. 
-Something is so deeply, intrinsically wrong. When I was a child, I called this feeling ‘The Fear’. My eyes unblinking, watering; I note the tears of skin that have ripped from my body, dripping from my new self like off-season petals.
+Something is so deeply, intrinsically wrong. When I was a child, I called this feeling ‘The Fear’. My eyes unblinking, watering; I note the tears of skin that have been ripped from my body, dripping from my new self like off-season petals.
 It takes me a while for me to see myself for what I am. My body is so deeply hurt even the touch of clothes on my skin makes me nauseous. I remove them, then the skin ribbons; stand naked and quiet under the yellow light, lock the door for good measure in case he wakes up and look down at myself. 
-There are no more scars on my skin. There’s not much skin left on my body at all. Everything seems to have gone but the skin on my chest.
-Looking down further, I spot my two old human feet stuck like thumbtacks against a couple of lean amber legs and choke on a laugh. //What the fuck is this?//
+[[There are no more scars on my skin-&gt;Zoea 1]]. There’s not much skin left on my body at all. Everything seems to have gone but the skin on my chest.
+Looking down further, I spot my two old human feet stuck like thumbtacks against a couple of lean, amber legs and choke on a laugh. //What the fuck is this?//
 I go to touch my face but I realise I can’t; lifting my arms anywhere higher than my thick torso feels like they’re being ripped out of their sockets.
 I think back to Helene Cixous, who argues that Écriture Féminine must be written from the body.
 But my body is broken.
@@ -376,7 +462,7 @@ A thick orange thorax; ten pointed legs, two with bladed claws.
 //Oh my God, I’m a fucking crab.//
 
 Without a trace of hesitation, I return my clothes to my body, pick up my skin; turn off the light and open the door. He’s still asleep, facing away from the hollow concave where my human body once lay. I have an urge to hold a funeral for myself, trace the lines of my old frame and cry for the future I thought I was going to have—boyfriends, casual sex, casually talking about sex. 
-[[//So it is all me. I am a freak.//-&gt;Self-Harm]]
+//So it is all me. I am a freak.//
 The moon drips into a cold stain on the bedroom floor and in its dim light I squint to collect my belongings from where they’ve been scattered; my socks, shoes, jacket, phone, bag. Without bothering to put anything else on, I leave to wait under a cold copper streetlight two blocks away from his house for my uber to come, telling myself I’ll message him when the sun’s up and knowing I won’t. ]
 
 
@@ -384,33 +470,106 @@ The moon drips into a cold stain on the bedroom floor and in its dim light I squ
 
 
 
-(enchant:?page,(text-colour:black))</tw-passagedata><tw-passagedata pid="9" name="Zoeba 3.1" tags="" position="533,359" size="100,100">[[I go to get a mammogram-&gt;Biopsy]]. There’s a lump in my left breast. 
+(enchant:?page,(text-colour:black))</tw-passagedata><tw-passagedata pid="8" name="Zoea 3" tags="" position="976,383" size="100,100">(mouseover-replace:&quot;Zoea 3&quot;)[Emotional Response 
+Guilt: &#39;I have let my partner down&#39;]
+##//Fig.4 Zoea 3 //
+
+(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+[Last year a boy writes me a poem and says, //I really did fall in love with you, Cush// and it scares me in a way I don’t know how to explain.]&lt;nametag|
+
+
+(font: &quot;arial narrow&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[“With pain during penetrative intercourse it is impossible to relax and instead your tension and anxiety increase.You are always waiting for the pain. You may also find that you become increasingly unable to relax and respond normally to any moments of intimacy.]
+
+[The words feel like they&#39;ve been sewn to my skin and every time I try to pull them out the derma beneath feels raw and plucked of feathers; the half-moons beneath my fingernails caked in blood and dirty.]&lt;nametag|
+
+
+(font: &quot;arial narrow&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[“A gentle caress of the arm or a simple cuddle may cause you to physically or emotionally withdraw from your partner. 
+This may be due to fear of any simple touch now leading inevitably to sex and pain. 
+So now you no longer enjoy any form of touch. 
+This adds further to the guilt and resentment and fuels the vicious cycle.” ]
+
+
+[When we hang out, I am so conscious of how it will end. I am so conscious that I will be unable to give him what he wants.]&lt;nametag| 
+
+
+(font: &quot;arial narrow&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[“[Vaginismus is] when you have a very tight pelvic floor and... pushing [in] a tampon, finger or penis is very difficult and it feels like burning, razor blade like symptoms in the vagina. One in five women will experience vaginismus. It’s extremely common, it’s extremely easy to fix.” ]
+
+
+[I spend nine hours listening to him talk about getting a Star Wars tattoo on his thigh and I tap my knee with my left hand in an attempt to stay present. We see each other for around three months and it’s the longest I’ve ever really kept it up. I break it off the only way I know how, cruelly and silently.]&lt;nametag|
+
+
+(font: &quot;arial narrow&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[“How isolating is it for the women who come in to this public space and there is no conversation about it?”
+
+
+ “It’s extremely isolating. They all think they’re alone, and when I tell them one in five women have it, they go, ‘what?’ Because often they’ve gone to see [[a GP who’s not diagnosed it properly-&gt;Zoeba 3.2]] and maybe they’ve gone five years with it, maybe they’ve gone fifteen years with it and maybe their GP’s said, ‘Just have a glass of wine and relax and you’ll be fine’. Or they’ve gone and got a PAP smear and the PAP smear has been fine, and they can put a finger or a vibrator in themselves, but as soon as their partner comes close to them, then their pelvic floor tightens. So it is a psychological and biological condition...And it’s really, really sad because it’s super easy to fix.”]
+
+[After he sends me the poem, little over half a year later, I reread our previous messages from where I’d stopped responding to him and they seem so natural, so casual— no sign of the days-long debate of what I’d reply to him with, the anxiety that had so physically knotted my stomach and made my mouth dry. 
+
+In the poem, he asks, why? Why had I done that to him?]&lt;nametag|
+
+
+(font: &quot;arial narrow&quot;)+(align:&quot;=&gt;&lt;=&quot;)+(box:&quot;========XXXXXXXXXXXXXXX==&quot;)[“...Women may feel the need to pretend that they are self-loving, to assert power and confidence to the outside world, and as a consequence they feel psychologically conflicted and disengaged from their true being. Shamed by the feeling that they can never let anyone know who they really are, [[they may choose isolation and aloneness for fear of being unmasked-&gt;Zoea 1]].”
+bell hooks, All About Love: New Visions, p.60]
+
+(align:&quot;==&gt;&quot;)+(box:&quot;=X&quot;)[And I think back to the night that I went home after that nine-hour date, when all I could think about was how badly I was wasting //his// time and I wonder if it was then that I began my final [[morph-&gt;Eggs]].]&lt;nametag|</tw-passagedata><tw-passagedata pid="9" name="Zoea 4" tags="" position="797,460" size="100,100">##//Fig. 5 Zoea 4(mouseover-replace:&quot;Zoea 4&quot;)[Emotional Response
+Misery: &#39;I&#39;m not a real woman&#39;]//
+(align:&quot;&lt;==&quot;)[[[I go to get a mammogram-&gt;Biopsy]]. There’s a lump in my left breast. 
+
 The doctor tells me I shouldn’t worry, that I’m in the wrong age bracket to be especially concerned. 
+
 I am not relieved. 
-At one point I sit in the Imaging service clinic in a cold hallway with nothing but a modesty gown, the artificial lights rubbing against my bare skin like cold rubber gloves. The lighting and blue tiles make me feel like I’m in an aquarium. I suppose I should be in a fish tank.
+
+At one point I sit in the Imaging service clinic in a cold hallway with nothing but a modesty gown, the artificial lights rubbing against my bare skin like cool rubber gloves. 
+The lighting and blue tiles make me feel like I’m in an aquarium. 
+I suppose I should be in a fish tank.
+
 To pass the time I let my hypochondria tango away with my thoughts and tap my ten legs against the blue lino-ground in succession.
+
 Tap, tap, tap, tap, tap. Pause. Tap, tap, tap, tap, tap. Pause.
+
 My hypochondria salsas with the idea of a mastectomy. 
-Even if the lump is benign, there’s a chance it could become cancerous and wouldn’t it be safer to cut off my breast now? And then, what’s the point of only having one breast?
+
+Even if the lump is benign, there’s a chance it could become cancerous and wouldn’t it be safer to cut off my breast now? 
+And then, what’s the point of only having one breast?
+
 I think about the politics of losing my breasts and it’s then that I become even more aware of my shell. 
-I look down at my body and see it as what it is; utterly sexless in form, in utility.
-It’s not the end of my world to lose both my breasts. I’ve become so utterly disconnected from my body that anyone that touches me now only touches shell, anyway.
-I try to imagine a future relationship with someone. It’s our first date, we’re sipping drinks. “Just a forewarning, I have no breasts. And I can’t have penetrative sex. And in my early twenties I finally metamorphosed into a crab. But what’s that thing they say about personality?”
+
+I look down at my body and see it as what it is; 
+utterly sexless in form, in utility.
+
+It’s not the end of my world to lose both my breasts. 
+I’ve become so utterly disconnected from my body that anyone that touches me now only touches shell, anyway.
+
+I try to imagine a future relationship with someone. 
+It’s our first date, 
+we’re sipping drinks. 
+
+“Just a forewarning, I have no breasts. And I can’t have penetrative sex. And in my early twenties I finally metamorphosed into a crab. But what’s that thing they say about personality?”
+
 Radio silence from my dream date.
+
 Tough crowd.
+
 “Cushla?”
+
 I look up, bundle my shirt and jacket onto my hip like a small child, and follow the nurse into the ultrasound room.
+
 I hadn’t thought about children.
-As I lay down against the bed, lifting my arm up above my head, brazen with [[my scars-&gt;Self-Harm]], I think a lot about what it is exactly that makes a woman.</tw-passagedata><tw-passagedata pid="10" name="Zoeba 3.2" tags="" position="690,278" size="100,100">(enchant: ?passage&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
-SPLIT ME
+
+As I lay down against the bed, lifting my arm up above my head, brazen with [[my scars-&gt;Zoea 1]], I think a lot about what it is exactly that makes a woman.]</tw-passagedata><tw-passagedata pid="10" name="Zoea 2" tags="" position="1041,259" size="100,100">(mouseover-replace:&quot;Zoea 2&quot;)[Emotional Response 
+Loss of Libido: &#39;I don&#39;t want to go down that path as it will hurt&#39;]
+##//Fig.3 Zoea 2 //
+
+(enchant:?page,(background:(gradient: 0, 0,#ffffff,0,#feb6f1,0.6592,#fd132b)))(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+[SPLIT ME
 
 CRACK ME
 
 PUNCTURE ME
 
 PUNCTUM ME
-#PIERCE ME WITH YOUR FORK OL’ LOVER BOY
 
+#PIERCE ME WITH YOUR FORK OL’ LOVER BOY
 
 SEA MAN
 
@@ -444,7 +603,6 @@ I DON’T WANNA BLUBBER NO MORE
 #I WANT TO BE EATEN
 #I WANT TO BE RAVISHED
 #I WANT YOU TO 
-
 BREAK ME
 
 SNAP ME
@@ -459,6 +617,7 @@ I WANT TO BE SEEN
 
 I WANT YOU TO KNOW ME
 DON’T GET TO KNOW ME
+
 #SNAP ME INSTEAD
 
 BROKEN ARMS
@@ -476,6 +635,7 @@ OH SO YOUNG
 OH SO NAIEVE
 
 OH WHAT A TEMPTRESS
+
 #OH WHAT A SIREN
 
 //CALL ME TO THE SEA BABY
@@ -484,33 +644,78 @@ I’M ALL YOURS, NOW//
 
 ###EAT ME
 ##EAT ME
-#EAT ME
-
-</tw-passagedata><tw-passagedata pid="11" name="Zoeba 3.3" tags="" position="834,367" size="100,100">When I first moved to Melbourne with this secret safeguarded behind my ribs I’d seen a doctor about it and she wrote me off because I’d never had a long-term intimate partner.
+#EAT ME]&lt;nametag|</tw-passagedata><tw-passagedata pid="11" name="Zoeba 3.2" tags="" position="1004,607" size="100,100">When I first moved to Melbourne with this secret safeguarded behind my ribs I’d seen a doctor about it and she wrote me off because I’d never had a long-term intimate partner.
 
 “With the right person it will be different.” 
 
 And I was nineteen and dumb-founded because I harboured this notion in my head that only male doctors were pricks. 
 
-It still //hurts// with the right person I’d been to stupefied to say.
+It still //hurts// with the right person I’d been too stupefied to say.
 
-//I have begun to cut off connections with people before I even know them because I have come to realise there is no point in pursuing something if I can’t give someone something physical. [[And what sort of life is one lived alone?-&gt;Self-Harm]]//
-</tw-passagedata><tw-passagedata pid="12" name="Megalopod" tags="" position="353,218" size="100,100">I’d been scarred by a story of a girl in my high school who had to go to the hospital because of a prolapsed anus, but I still thought a lot about how maybe if I met someone I really liked I could just get used to doing [[anal.-&gt;a list]]
+//I have begun to cut off connections with people before I even know them because I have come to realise there is no point in pursuing something if I can’t give someone something physical. [[And I&#39;m not sure how much longer I can keep up being //this// alone.-&gt;Zoea 1]]//
+</tw-passagedata><tw-passagedata pid="12" name="Megalopa" tags="" position="490,341" size="100,100">##//Fig. 6 Megalopa (mouseover-replace:&quot;Megalopa&quot;)[Desire to please and oblige partner]//
+(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+[I’d been scarred by a story of a girl in my high school who had to go to the hospital because of a prolapsed anus, but I still thought a lot about how maybe if I met someone I really liked I could just get used to doing [[anal.-&gt;a list]]
+]&lt;nametag|
 
+</tw-passagedata><tw-passagedata pid="13" name="Juvenile" tags="" position="363,184" size="100,100">##//Fig. 7 Juvenile (mouseover-replace:&quot;Juvenile&quot;)[Anxiety about pain]//
 
-// [[Back-&gt;How A Vulva Works]] //</tw-passagedata><tw-passagedata pid="13" name="Juvenile" tags="" position="177,124" size="100,100">I lay on the physio bed with my knees tilted at 90 degrees, one leant against the cold white wall and the other nestled into the warm stomach of my physio while my vagina lays fresh-faced and open to the world and I look everywhere but as the physio sticks an oil coated finger inside of me and tells me to do pelvic floor exercises. 
+I’m scared of men. 
+I’m scared of really, really big dicks. 
+I’m scared of sex. (Maybe.)
+I’m scared I’m too inexperienced. 
+I’m scared no one will love me. 
+I’m scared of paranormal activity. 
+[[I’m scared of vulnerability-&gt;Adult]]. 
+I’m scared of well-dressed guys my age when I walk past them on the street. 
+I’m scared of love. 
+I’m scared I don’t know what love is. 
+I’m sort of scared of being loved. Because then I’ll have to acknowledge myself for what I am. 
+I’m scared of being labelled a liar. I am a liar. 
+I’m scared I will never be able to fuck whoever I want. 
+I’m scared of seeing past hook-ups on the street. 
+I’m scared I’ll never get well. 
+I’m scared sex will never feel empowering the way all my great feminist mothers heralded. 
+[[I’m scared of being a woman-&gt;Biopsy]]. 
+I’m scared of not being woman-enough. 
+When I was seventeen my Mum told me about how some boys balls don’t drop until they’re heaps older. I’m scared one day I’ll wake up and my balls will have dropped. 
+I’m scared my attachment style will never get healed. 
+I’m scared of healing. 
+I’m scared of living. 
+I’m really scared of life. 
+I’m scared of pursuing things that I want because there is a chance that I will fail. 
+I’m scared of failure. 
+I’m scared of that soft spot on your wrists where veins poke through on warm days. 
+[[I’m scared of getting cancer-&gt;Zoea 4]]. 
+I’m scared of my parents dying. 
+I’m scared of fitted clothes.
+I’m scared of sky-diving. 
+I’m really scared of heights. 
+I’m scared my Dad doesn’t know how much I love him. 
+I’m still scared by some Doctor Who episodes. 
+Sometimes I’m scared because I don’t know how to act around my Mum. 
+[[I guess my glass dildos can be sort freaky-&gt;Scared]]. 
+I&#39;m pretty scared I’ll never be able to have penetrative sex. 
+More so I’m scared that I will be able to have penetrative sex and then I’ll have to shift my belief that I’m unlovable onto something else. 
+My self-harm scars maybe. My fat thighs. My cellulite riddled hamstrings. My saggy arse. The blubber under my upper arms. My messaging habits. 
+Most of all I’m really scared of wasting life. 
+I mean, Carpe Diem and all, but terror literally runs through my veins.
+
+But yeah, yeah, a life lived in fear, is not a life and all that. 
+
+So I write this list and then I rub them all out.(mouseover-replace:&quot;and then I rub them all out.&quot;)[and  I say to myself, I will try to be grateful instead.]</tw-passagedata><tw-passagedata pid="14" name="Scared" tags="" position="111,90" size="100,100">I lay on the physio bed with my knees tilted at 90 degrees, one leant against the cold white wall and the other nestled into the warm stomach of my physio while my vagina lays fresh-faced and open to the world and I look everywhere but as the physio sticks an oil coated finger inside of me and tells me to do pelvic floor exercises. 
 
 “On a scale of one to ten, let me know how much it hurts. I’m usually happy to keep going at a one-to-two pain level, but anything more and we will definitely stop, okay?”
 
 I am careful to leave my shoes on, which she finds strange, but I don’t care. 
-Beneath my shoes are the remainder of my [[two feet-&gt;Zoeba]]; the rest of my legs dangle precariously off the edge of the bed like a patulous silk fan.
+Beneath my shoes are the remainder of my [[two feet-&gt;Eggs]]; the rest of my legs dangle precariously off the edge of the bed like a patulous silk fan.
 
 I read somewhere about (link: &quot;how women are more likely to minimise their pain&quot;) 
-[
+[(font: &quot;arial narrow&quot;)[
 
 //She pointed out that some women tolerate pain with sex “just because they have this belief that, ‘I guess some pain is to be expected’.”
 She went on, “There’s something about women bearing pain longer than they need to,” perhaps in other domains of their life, as well as in sex. They tolerate pain because they think that is their only option, that effective treatments aren’t available (they are!), or that the hassle of seeking treatment isn’t worth the potential benefit (it is!). And medical professionals sometimes reinforce this tendency by not taking pain seriously or assuming that if there is no infection or injury, the pain is “all in her head.” // 
-Come As You Are, Emily Nagoski, p. 321 ]
+Come As You Are, Emily Nagoski, p. 321 ]]
  
 and it seems funny to me to look back and see how I describe the initial pain as less than one, &quot;Like three -quarters of one&quot;, I say.
 
@@ -557,62 +762,34 @@ I nod.
 
 (align:&quot;=&gt;&lt;=&quot;)+(box:&quot;X&quot;)[#(text-style:&quot;blink&quot;)+(text-color: &quot;red&quot;) [SEX]]
 
-[[“Are you seeing a psychologist?”-&gt;Divulge]]
-</tw-passagedata><tw-passagedata pid="14" name="Scared" tags="" position="36,120" size="100,100">I pour a container of sea salt into my table water and sip it calmly. 
-(link: &quot;Scientists say crabs feel no pain.&quot;) [(goto-url: &#39;https://www.theguardian.com/world/2005/feb/08/research.highereducation&#39;)]
-Liars.
-I am hideously exhausted when I talk to people because I don’t just talk and listen anymore, instead one eye stalk stares out at the people I’m conversing with, while my other eye cranes round in a 180 to peer down at my thick red shell body; making me feel so utterly disconnected and apart from my self and those around me that all I can imagine doing is ripping my eyes from their sockets and sleeping for the rest of eternity.
-I type into google, ‘Why do people metamorphose?’
 
-(link:&quot;The first site ignores me abruptly.&quot;)[
-‘Humans, with our structural system intact, are not able to make such a physically striking transformation. We are stuck or graced with our human form throughout our life. This leaves us with the option of mental or situational metamorphosis. The good news is that we are not limited to one transformation. We can do it as many times as we desire.’
+[[“Are you seeing a psychologist?”-&gt;Divulge]]</tw-passagedata><tw-passagedata pid="15" name="Zoea 1" tags="" position="885,128" size="100,100">##//Fig.2 Zoea 1(mouseover-replace:&quot;Zoea 1&quot;)[Pain/Spasm]//
 
-http://durangonaturestudies.org/humans-metamorphosis-part-life/ ]
- 
-It’s been years, but I’m finally trying to explain it.
-
-“It’s like there’s this wall,” I tell my therapist. I know I can’t even begin to explain what being a crustacean is like, “This glass wall between me and everyone I know. And I try to connect, but I’m behind it. I can see you and you can see me, but we just-- I just can’t connect. So much of the time, it feels like I’m not connecting, like I’m not really there, like I’m just looking down on things.”
-
-I don’t mention my eye stalks.
-
-I remember being drunk one time and having a discussion with a friend about how I’m never really certain the world is real. 
-How I’m almost always waiting for the day where I’ll just slip through something— I’ll be walking down the street and suddenly the pavement will swell and loosen, and I’ll just sink in, with just enough time for that single moment of clarity, “So, it was all for nothing.” 
-
-People often talk about the performative nature of sex, but for me, the act is in living itself. 
-The physicality of sex just makes me more aware of the disconnect. 
-I look at people for too long and make them uncomfortable. 
-I touch them, 
-not necessarily in a sexual way, 
-in a way of reassurance. 
-When I wake up in the morning, I am never certain they’ll be there. 
-
-I blame my shell. 
-I blame the dyspareunia. 
-The vaginismus. 
-I say, &quot;I evolved too soon. Carcinisation is taking too long for the rest of you. No, sorry that was mean, it’s not you, it really is me. I’m literally a crab.&quot;
-
-I touch people unnecessarily when I am drunk. 
-I lean my hands on knees, tap people’s arms, try to connect, make sure they’re there; make sure I’m there, too. 
-
-Just once I want to be held and to feel it.
-
-Cooper has been fighting with his housemates and I ask him how bad it is, whether he could just use the house to sleep in and connect only when he needs to. He looks up at me, eyes dark and says, “Yeah well I’m just not okay with being alone unlike you.”</tw-passagedata><tw-passagedata pid="15" name="Self-Harm" tags="" position="969,291" size="100,100">During the pandemic, the feeling of isolation has become second nature to most of Australia’s population. 
+During the pandemic, the feeling of isolation has become second nature to most of Australia’s population. 
 Statistics surrounding loneliness and non-suicidal self-injury (NSSI) are indisputably linked. 
+
+(font:&quot;arial&quot;)[(link: &quot;Covid-19, Lockdown and Self-Isolation: Evaluation of Deliberate Self-Harm Admissions&quot;) [(goto-url:&#39;https://www.frontiersin.org/articles/10.3389/fpsyt.2021.662885/full&#39;)]
+
+(link: &quot;More than 40 NSW children and teenagers rushed to hospital for self-harm every day&quot;) [(goto-url: &#39;https://www.smh.com.au/national/nsw/more-than-40-nsw-children-and-teenagers-rushed-to-hospital-for-self-harm-every-day-20210827-p58mg7.html&#39;)]
+
+(link: &quot;Rise of self-harm and use of mental health services since COVID pandemic began, new data reveals&quot;)[(goto-url: &#39;https://www.abc.net.au/news/2021-07-20/rise-of-self-harm-mental-health-services-covid-pandemic/100305640&#39;)]]
+
 Isolation is a breeding ground for the addictive behaviour of self-harm and NSSI is incredibly cyclical. 
 People harm when they feel alone, the action makes them feel more isolated, they continue to harm.
 
-Before my diagnosis, when it came to dating, I’d ultimatum-ed myself with two options.
+[[Before my diagnosis-&gt;Scared]], when it came to dating, I’d ultimatum-ed myself with two options.
 
-(link: &quot;1&quot;)[- Keep things completely casual and cut them off before they cut you off
+(link: &quot;1.&quot;)[1. Keep things completely casual and cut them off before they cut you off
 (Because once they realised we would not being have penetrative sex, they //would// cut me off.)]
 
-(link: &quot;2&quot;)[- Be alone forever.]
+(link: &quot;2.&quot;)[2. Be alone forever.]
 
-Lockdown 6.0 is announced. My internal isolation echoes into reality. 
-I go to harm and my skin ruptures. Driven back into my self, as if popped open, I look up, meet my frightened eyes in the mirror all silent witness to that sad dog mouth and those slobbering, colourless cheeks and I begin to cry, terrified.
-I check myself, and beneath the wound all there is is a lively poppy-red singe, the colour of a fresh-boiled lobster. 
+When Lockdown 6.0 is announced, my internal isolation echoes into reality. 
+I go to harm and my skin ruptures. 
+Driven back into my self, for a split second I look up to meet my frightened eyes in the mirror, all silent witness to that sad dog mouth and those slobbering, colourless cheeks and I begin to cry, terrified.
+I check myself, my breath, my skin and beneath the wound all there is is a lively poppy-red singe, the colour of a fresh-boiled lobster. 
 The denser skin, the thick scars where I’d thought to hurt myself in the same place to lessen the coverage of my sores, is raw and orange, the touch and feel of a soft-shelled crab.
-With hooked fingers, I trace the outlines until I shiver and I think a lot about evolution and how we evolve to survive. 
+Fingers hooked, I trace the outlines with a shiver and think a lot about evolution and how we evolve to survive. 
 
 [[&#39;&#39;How do we evolve to survive when the danger is ourselves? &#39;&#39;-&gt;Passage Image]]
 
@@ -620,8 +797,7 @@ Later, when I&#39;m done, I put on my headphones and run a hot bath to distract 
 The B52’s plays and I think of my Mum, 
 of Rock Lobsters 
 and of my own crab skeleton, 
-as the remaining band of skin around my chest splits; the last of my fire-engine red shell mutating out from under my skin like the blooming of a wet, blood-soaked bud.
-</tw-passagedata><tw-passagedata pid="16" name="Biopsy" tags="" position="1051,444" size="100,100">I have to get a biopsy for the breast lump. 
+as the remaining band of skin around my chest splits; the last of my fire-engine red shell mutating out from under my skin like the blooming of a wet, blood-soaked bud.</tw-passagedata><tw-passagedata pid="16" name="Biopsy" tags="" position="634,511" size="100,100">I have to get a biopsy for the breast lump. 
 
 I’m wearing a fitted black tube top that I bought when I was seventeen. It’s stretchy and slips down my chest when I’m in a hurry. 
 Whenever I become self-conscious, I tug it up so that the folds of the fabric roll up into my arm pits. 
@@ -652,12 +828,12 @@ The car slowed down, enough time for the front passenger to call out,
 
 For some reason that was worse to me than a whistle, than a 
 ‘nice tits, love’, 
-which was something myself and most of the teenage girls in the derogatory town I grew up in were used to 
+which was something myself and most of the teenage girls in the derogatory town I grew up in were used to, 
 and something that could be easily laughed off. 
 For some reason it really got to me.
 
 I did the thing I always do when I’m humiliated and anxious. 
-I let my eyes sink into the back of my skull and tunnel-vision, holding my breath until my body begins to float, my vision blurring black. 
+I let my eyes sink into the back of my skull and tunnel-visioned, holding my breath until my body began to float, vision blurring black. 
 When I reached school, I immediately went to Lost Property and wore a sports jumper for the rest of the 27-degree day,
 rolling the blue fleece up to the sweaty crease of my elbows.
 
@@ -686,20 +862,20 @@ The man on the tram gets off two stops before me.
 I find I’ve been holding my breath. 
 
 I suck in a lungful and let it out, slowly, adjust my top, [[wrap my jacket-&gt;Letting Go]] around my body and lean back more comfortably, setting my sight on the people outside the tram’s window.
-</tw-passagedata><tw-passagedata pid="17" name="a list" tags="" position="510,195" size="100,100">(link:&quot;Cooper has a list of all the guys he’s fucked on his phone.&quot;)[
+</tw-passagedata><tw-passagedata pid="17" name="a list" tags="" position="596,178" size="100,100">(link:&quot;Cooper has a list of all the guys he’s fucked on his phone.&quot;)[
 
 Some of the names include:
 
 (enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
 [
-1.	Ranga cartel guy
+1.	ranga cartel guy
 2.	Lawyer Lad
-3.	Random guy in middle of 2017 when I was a fridget
-4.	Prada boy
-5.	Big dick Jack
-6.	Motel man
+3.	random guy in middle of 2017 when I was a frigid
+4.	Prada Boy
+5.	Big Dick Jack
+6.	Motel Man
 7.	Durry Muncher
-8.	Urban planner pal
+8.	urban planner pal
 9.	Fall Asleep Fella
 10.	That “Darling” Dude]&lt;nametag|] 
 
@@ -708,42 +884,69 @@ After he’s finished reading them out to me one night, he sighs dramatically an
 
 “Sure. You can put them in a poem if you want.”
 
-[[And I smirk because I have no doubt that one day, I will-&gt;Next]]. </tw-passagedata><tw-passagedata pid="18" name="Next" tags="" position="664,489" size="100,100">The only real thing that stressed me out about anal isn’t the penetration- [[I deal with pain regardless-&gt;Zoeba]]- it’s the douching. And the after-sex shits. Maybe in the gay community this is less of a taboo. Or maybe they’re all just more familiar with it. I couldn’t imagine a straight cis guy finally trying anal for the first time and being happy if his dick pulled out with his girlfriends digested breakfast. 
-I can’t even begin to imagine the conversation. 
+[[And I smirk because I have no doubt that one day, I will-&gt;Next]]. </tw-passagedata><tw-passagedata pid="18" name="Next" tags="" position="716,299" size="100,100">The only real thing that stressed me out about anal isn’t the penetration, ([[I deal with pain regardless-&gt;Eggs]]), it’s the douching.
+And the after-sex shits. 
+Maybe in the gay community this is less of a taboo. 
+Or maybe they’re all just more familiar with it.
+I couldn’t imagine a straight cis guy finally trying anal for the first time and being happy if his dick pulled out with his girlfriends digested breakfast. 
+
+Like I genuinely can’t even //begin// to imagine the conversation. 
+
 Sex is lowkey gross and grotty and filled with gas and fluids and spit and embarrassment and most consider that part of the intimacy- but even my parents, married for thirty years, still shit with the door closed. 
-There’s that line too, that boundary that anal crosses with strangers. 
-When you meet someone for the first time and after thirty minutes it’s still not working so you say, we can try anal, almost desperately, the guys are usually always a little reserved, distrustful and then when they see you’re serious they’re literally more ecstatic than they were when they realised they would get to have sex with you in the first place and I’m not a guy obviously, but I find it such a turnoff. 
-Did you not want to fuck me?
-What the fuck is more exciting about the tight space of my arsehole and the sight of my back and unbrushed head?
-And then they think because you’ve granted them access to this ‘other’ space, that you’re overtly kinky, that suddenly you like to be slapped, or grabbed, or choked, or clawed and sometimes it’s nice but mostly you’re fucking a stranger and violence is violence until you’ve developed trust and intimacy and even then--
-In the midst of my metamorphosis I’ve been reading this essay and it talks about Marie Darrieussecq’s ‘Pig Tales’ and how when the protagonist turns into her pig self, her clients at the brothel are enamoured by it and end up crawling around on all fours themselves and fucking ‘like animals’. It’s a ‘satirical take on gender roles’, but I find that phrasing in itself to be satirical.
-“Do you think it’s a question of sexuality? Maybe you’re just not interested in men.”
-And when I read stories of men behaving like pigs and when I meet [[men who behave like pigs-&gt;Biopsy]] I wish that this were 100% true. 
+
+There’s that line too, 
+that boundary that anal crosses with strangers. 
+
+When you meet someone for the first time and after thirty minutes it’s still not working so you say, //we can try anal//, almost (mouseover-replace:&quot;almost&quot;)[okay, so a little] desperately, the guys are usually somewhat reserved, distrustful and then when they see you’re serious, they’re literally more ecstatic than they were when they realised they would get to have sex with you in the first place and I don&#39;t really know your position on the subject, but I find it such a turnoff. 
+
+####Did you not want to fuck //me//?
+
+What the fuck is more exciting about the tight space of my arsehole and the sight of my unbrushed head?
+
+And then they think because you’ve granted them access to this ‘other’ space, 
+that you’re overtly kinky, 
+that suddenly you like to be slapped, 
+or grabbed, 
+or choked, 
+or clawed 
+and sometimes it’s nice 
+but mostly you’re fucking a stranger and violence is violence until you’ve developed trust and intimacy and even then--
+
+In the midst of my metamorphosis I’ve been reading this essay and it talks about Marie Darrieussecq’s ‘Pig Tales’ and how when the protagonist turns into her pig self, her clients at the brothel are enamoured by it and end up crawling around on all fours themselves and fucking ‘like animals’. 
+It’s a ‘satirical take on gender roles’, but I find that phrasing in itself to be satirical.
+
+[[“Do you think it’s a question of sexuality? Maybe you’re just not interested in men.”-&gt;Vaginismus]]
+
+And when I read stories of men behaving like pigs and when I meet [[men who behave like pigs-&gt;Biopsy]],
+
+I wish that this were 100% true. 
+
 But it is not a question of sexual attraction or emotional attachment. 
+
 The problem lies within me and my [[letting go-&gt;Letting Go]].
-
-// [[Back-&gt;OPEN]] //</tw-passagedata><tw-passagedata pid="19" name="Passage Image" tags="" position="469,10" size="100,100">
+</tw-passagedata><tw-passagedata pid="19" name="Passage Image" tags="" position="471,0" size="100,100">(enchant:?page,(text-colour:white)+(background:white))
 &lt;!-- Image Map Generated by http://www.image-map.net/ --&gt;
-&lt;img src=&quot;./img/crabmap.jpg&quot; usemap=&quot;#crabmap&quot;&gt;
+&lt;img src=&quot;./img/lifecycle.jpg&quot; usemap=&quot;#lifecycle&quot;&gt;
 
-&lt;map name=&quot;crabmap&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Juvenile&quot; title=&quot;Juvenile&quot; href=&quot;Juvenile&quot; coords=&quot;109,390,242,392,244,106,487,109,498,355,334,368,330,393,333,440,108,438&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Eggs&quot; title=&quot;Eggs&quot; href=&quot;Eggs&quot; coords=&quot;929,72,922,314,1163,321,1169,170,1495,166,1497,120,1162,71&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Zoeba&quot; title=&quot;Zoeba&quot; href=&quot;Zoeba&quot; coords=&quot;1111,389,1354,390,1354,430,1555,437,1559,486,1374,488,1348,495,1355,626,1104,631&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Zoeba 3.1&quot; title=&quot;Zoeba 3.1&quot; href=&quot;Zoeba 3.1&quot; coords=&quot;742,658,745,897,816,900,823,650,1090,763,1385,770,1437,836,1087,821,1077,759,939,706,845,641,823,646&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Zoeba 3.2&quot; title=&quot;Zoeba 3.2&quot; href=&quot;Zoeba 3.2&quot; coords=&quot;852,723,857,951,934,956,934,771,956,742,1032,751,1066,773,1064,812,1067,852,1129,847,1293,852,1396,860,1391,908,1244,917,1083,904,1078,836,1057,767,954,723&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Zoeba 3.3&quot; title=&quot;Zoeba 3.3&quot; href=&quot;Zoeba 3.3&quot; coords=&quot;961,767,965,1026,1053,1028,1104,1020,1268,1013,1573,1024,1574,946,1069,929,1046,839,1039,778&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Megalopod&quot; title=&quot;Megalopod&quot; href=&quot;Megalopod&quot; coords=&quot;547,359,792,373,787,593,652,605,645,702,429,701,416,646,547,598&quot; shape=&quot;poly&quot;&gt;
-    &lt;area target=&quot;&quot; alt=&quot;Adult&quot; title=&quot;Adult&quot; href=&quot;Adult&quot; coords=&quot;37,636,323,633,324,969,28,987&quot; shape=&quot;poly&quot;&gt;
+&lt;map name=&quot;lifecycle&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Eggs&quot; title=&quot;Eggs&quot; href=&quot;Eggs&quot; coords=&quot;1047,45,1153,9,1407,17,1473,239,1306,338,1084,263,1029,172&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Zoea 1&quot; title=&quot;Zoea 1&quot; href=&quot;Zoea 1&quot; coords=&quot;1534,25,1914,35,1926,121,1812,255,1692,406,1530,306,1489,129&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Zoea 2&quot; title=&quot;Zoea 2&quot; href=&quot;Zoea 2&quot; coords=&quot;1839,296,2016,153,2183,174,2295,273,2270,393,2205,530,2136,558,1951,562,1784,513&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Zoea 3&quot; title=&quot;Zoea 3&quot; href=&quot;Zoea 3&quot; coords=&quot;2142,581,2293,617,2293,1004,2030,1002,1957,878,1898,831,1853,766,1831,603&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Zoea 4&quot; title=&quot;Zoea 4&quot; href=&quot;Zoea 4&quot; coords=&quot;2036,1152,1937,886,1798,788,1658,743,1528,753,1442,861,1475,1067,1525,1215,1749,1242,1965,1215,1975,1166&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Megalopa&quot; title=&quot;Megalopa&quot; href=&quot;Megalopa&quot; coords=&quot;1153,625,1316,699,1350,831,1359,951,1407,1071,1430,1213,1210,1246,968,1246,815,1189,770,1006,764,796,852,686,919,654&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Juvenile&quot; title=&quot;Juvenile&quot; href=&quot;Juvenile&quot; coords=&quot;300,625,860,654,1017,635,994,328,913,92,630,106,424,151,270,261,209,381&quot; shape=&quot;poly&quot;&gt;
+    &lt;area target=&quot;&quot; alt=&quot;Adult&quot; title=&quot;Adult&quot; href=&quot;Adult&quot; coords=&quot;23,699,734,745,717,1112,15,1130&quot; shape=&quot;poly&quot;&gt;
 &lt;/map&gt;
+
 &lt;div style=&quot;display:none;&quot;&gt;
-[[Juvenile]]
 [[Eggs]]
-[[Zoeba]]
-[[Zoeba 3.1]]
-[[Zoeba 3.2]]
-[[Zoeba 3.3]]
-[[Megalopod]]
+[[Zoea 1]]
+[[Zoea 2]]
+[[Zoea 3]]
+[[Zoea 4]]
+[[Megalopa]]
+[[Juvenile]]
 [[Adult]]
 &lt;/div&gt;
 
@@ -756,71 +959,95 @@ Harlowe.goto(this.alt);
 $(document).ready(function() {
     $(&#39;map&#39;).imageMapResize();
 });
-&lt;/script&gt;</tw-passagedata><tw-passagedata pid="20" name="Meaning" tags="Comeasyouare" position="135,755" size="100,100">(enchant:?page,(text-colour:black)+(font:&quot;Times New Roman&quot;))
+&lt;/script&gt;</tw-passagedata><tw-passagedata pid="20" name="Meaning" tags="Comeasyouare" position="69,676" size="100,100">(enchant:?page,(text-colour:black)+(font:&quot;Times New Roman&quot;))
 (align:&quot;&lt;==&quot;)+(box:&quot;XX===&quot;)[###Come As You Are, Emily Nagoski, 2015
 
-(link: &quot;Fact One&quot;) [Medieval anatomists called women’s external genitals the &#39;pudendum&#39;, a word derived from the Latin // pudere //, meaning &#39;to make ashamed.&#39; Our genitals were thus named &#39;from the shamefacedness that is in women to have them seen.
-The reasoning went like this: Women’s genitals are tucked away between their legs, as if they wanted to be hidden, whereas male genitals face forward...And why would men’s and women’s genitals be different in this way? If you’re a medieval anatomist, steeped in a sexual ethic of purity, it’s because: [[shame-&gt;Biopsy]]. 
+(link: &quot;SHAME&quot;) [“Medieval anatomists called women’s external genitals the &#39;pudendum&#39;, a word derived from the Latin // pudere //, meaning &#39;to make ashamed.&#39; Our genitals were thus named &#39;from the shamefacedness that is in women to have them seen.
+The reasoning went like this: Women’s genitals are tucked away between their legs, as if they wanted to be hidden, whereas male genitals face forward...And why would men’s and women’s genitals be different in this way? If you’re a medieval anatomist, steeped in a sexual ethic of purity, it’s because: [[shame-&gt;Biopsy]].” 
 p.17 ]
 
 
-(link: &quot;Fact Two&quot;) [
-The [[hymen-&gt;Vaginismus]] is a profound example of the way humans metaphorize anatomy. Here is an organ that has no biological function, and yet Western culture made up a powerful story about he hymen a long time ago. This story has nothing to do with biology and everything to do with controlling women. Culture saw a ‘barrier’ at the mouth of the vagina and decided it was a marker of ‘virginity’...Such a weird idea could have been invented only in a society where women were literally property, their vaginas their most valuable real estate—a gated community.
+(link: &quot;HYMENS&quot;) [
+“The [[hymen-&gt;Vaginismus]] is a profound example of the way humans metaphorize anatomy. Here is an organ that has no biological function, and yet Western culture made up a powerful story about he hymen a long time ago. This story has nothing to do with biology and everything to do with controlling women. Culture saw a ‘barrier’ at the mouth of the vagina and decided it was a marker of ‘virginity’...Such a weird idea could have been invented only in a society where women were literally property, their vaginas their most valuable real estate—a gated community.”
 p.28-29] 
 
 
-(link: &quot;Fact Three&quot;) [
-The closest thing to true is that during intercourse the hymen can be painful if it’s not used to being stretched—that’s one of a number of potential causes of pain with penetration, but it is by no means the most common. (The most common is lack of lubrication.)
+(link: &quot;PAIN&quot;) [
+“The closest thing to true is that during intercourse the hymen can be painful if it’s not used to being stretched—that’s one of a number of potential causes of pain with penetration, but it is by no means the most common. (The most common is lack of lubrication.)
 But the hymen doesn’t break and stay broken forever, like some kind of freshness seal. If a hymen tears or bruises, it heals. And the size of a hymen doesn’t vary depending on whether the vagina has been penetrated. Also, it usually doesn’t bleed. Any blood with first penetration is more likely due to general vaginal tearing from lack of lubrication than to damage to the hymen. 
-Women’s hymens vary because, as far as science has been able to discover, the hymen was not selected for by evolution. It has no reproductive or any other function. (link: &quot;It’s a by-product...like men’s nipples.&quot;)[(goto-url:&#39;https://www.webmd.com/fitness-exercise/what-you-need-to-know-about-runners-nipple#1&#39;)] 
+Women’s hymens vary because, as far as science has been able to discover, the hymen was not selected for by evolution. It has no reproductive or any other function. (link: &quot;It’s a by-product...like men’s nipples.&quot;)[(goto-url:&#39;https://www.runnersworld.com/health-injuries/a20854000/these-photos-of-bloody-nipples-are-painful-to-even-look-at/&#39;)] ”
 p.27-28]
-]</tw-passagedata><tw-passagedata pid="21" name="Adult" tags="" position="82,237" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
-(align:&quot;&lt;==&gt;&quot;)+(box:&quot;X&quot;)[=
-[I’m scared of men. I’m scared of really, really big dicks. I’m scared of sex. Maybe. I’m scared I’m too inexperienced. I’m scared no one will love me. I’m scared of paranormal activity. I’m scared of vulnerability. I’m scared of well-dressed guys my age when I walk past them on the street. I’m scared of love. I’m scared I don’t know what love is. I’m more scared I will be loved. And then I’ll have to acknowledge myself for what I am. I’m scared of being labelled a liar. I am a liar. I’m scared I will never be able to fuck whoever I want. I’m scared sex will never be casual. I’m scared of seeing past hook-ups on the street. I’m scared I’ll never get well. I’m scared sex will never feel empowering the way all my great feminist mothers heralded. [[I’m scared I’ll never connect with anyone.-&gt;Scared]] I’m scared of being a woman. I’m scared of not being woman-enough. When I was seventeen my Mum told me about how some boys balls don’t drop until they’re heaps older. I’m scared one day I’ll wake up and my balls will have dropped. I’m scared my attachment style will never get healed. I’m scared of healing. I’m scared of living. I’m really scared of life. I’m scared of pursuing things that I want because there is a chance that I will fail. I’m scared of failure. I’m scared of the soft spot on your wrists where veins poke through on warm days. I’m scared of getting cancer. I’m scared of my parents dying. I’m scared someone I know will commit suicide before me. I’m scared of sky-diving. I’m really scared of heights. I’m scared my Dad doesn’t know how much I love him. I’m still scared by some Doctor Who episodes. Sometimes I’m scared because I don’t know how to act around my Mum. Sometimes I’m scared I’ll never be able to have penetrative sex. More so I’m scared that I will be able to have penetrative sex and then I’ll have to shift my belief that I’m unlovable onto something else. My self-harm scars maybe. My fat thighs. My cellulite riddled hamstrings. My saggy arse. The blubber under my upper arms. My messaging habits. [[My identity.-&gt;Identity]] And most of all I’m so scared of wasting life. But isn’t that what this putrid list is?
+]</tw-passagedata><tw-passagedata pid="21" name="Adult" tags="" position="48,282" size="100,100">##//Fig. 8 Adult(mouseover-replace:&quot;Adult&quot;)[Eventually unable to try]//
 
+I pour a container of sea salt into my table water and sip it calmly. 
+(link: &quot;Scientists say crabs feel no pain.&quot;) [(goto-url: &#39;https://www.theguardian.com/world/2005/feb/08/research.highereducation&#39;)]
+Liars.
+I am hideously exhausted when I talk to people because I don’t just talk and listen anymore, instead one eye stalk stares out at the people I’m conversing with, while my other eye cranes round in a 180 to peer down at my thick red shell body; making me feel so utterly disconnected and apart from my self and those around me that all I can imagine doing is ripping my eyes from their sockets and sleeping for the rest of eternity.
+I type into google, ‘Why do people metamorphose?’
 
-A rotting wall of waste?]&lt;nametag|
-</tw-passagedata><tw-passagedata pid="22" name="Vaginismus" tags="" position="385,617" size="100,100">Things People Have Mentioned about [[Vaginsimus-&gt;Causes]]:
+(link:&quot;The first site ignores me abruptly.&quot;)[
+‘Humans, with our structural system intact, are not able to make such a physically striking transformation. We are stuck or graced with our human form throughout our life. This leaves us with the option of mental or situational metamorphosis. The good news is that we are not limited to one transformation. We can do it as many times as we desire.’
+
+http://durangonaturestudies.org/humans-metamorphosis-part-life/ ]
+ 
+It’s been years, but I’m finally trying to explain it.
+
+“It’s like there’s this wall,” I tell my therapist. I know I can’t even begin to explain what being a crustacean is like, “This glass wall between me and everyone I know. And I try to connect, but I’m behind it. I can see you and you can see me, but we just-- I just can’t connect. So much of the time, it feels like I’m not connecting, like I’m not really there, like I’m just looking down on things.”
+
+I don’t mention my eye stalks.
+
+I remember being drunk one time and having a discussion with a friend about how I’m never really certain the world is real. 
+How I’m almost always waiting for the day where I’ll just slip through something— I’ll be walking down the street and suddenly the pavement will swell and loosen, and I’ll just sink in, with just enough time for that single moment of clarity, “So, it was all for nothing.” 
+
+People often talk about the performative nature of sex, but for me, the act is in living itself. 
+The physicality of sex just makes me more aware of the disconnect. 
+I look at people for too long and make them uncomfortable. 
+I touch them, 
+not necessarily in a sexual way, 
+in a way of reassurance. 
+When I wake up in the morning, I am never certain they’ll be there. 
+
+I blame my shell. 
+I blame the dyspareunia. 
+The vaginismus. 
+
+I say, &quot;I evolved too soon. Carcinisation is taking too long for the rest of you. No, sorry that was mean, it’s not you, it really is me. I’m literally a crab.&quot;
+
+I touch people unnecessarily when I am drunk. 
+I lean my hands on knees, tap people’s arms, try to connect, make sure they’re there; make sure I’m there, too. 
+
+Just once I want to be held and to feel it.
+
+Cooper has been fighting with his housemates and I ask him how bad it is, whether he could just use the house to sleep in and connect only when he needs to. He looks up at me, eyes dark and says, [[“Yeah well I’m just not okay with being alone unlike you.”-&gt;Scared]]</tw-passagedata><tw-passagedata pid="22" name="Vaginismus" tags="" position="280,666" size="100,100">Things People Have Said To Me About [[Vaginsimus-&gt;Causes]]:
 (enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
 
-“Have you tried [lube?]&lt;band1|”
+“Have you tried [...?]&lt;band1|”
 
 [“But like, you have a clit, don’t you?”
 
-“There&#39;s this app called Headspace...&quot;
+“There&#39;s this app called Headspace...”
 
-[[“With the right person it will be different.”-&gt;Zoeba 3.3]]
+[[“With the right person it will be different.”-&gt;Zoeba 3.2]]
 
 “Do you have a vibrator?”
 
 “What about foreplay? Because like, what if you&#39;re just not turned on?”
 
-[[“Do you think it’s a question of sexuality? Maybe you’re just not interested in men.”-&gt;Next]]
+[[“Do you think it’s a question of sexuality?”-&gt;Next]]
 
-&quot;You probably just need to relax.&quot;
+“You probably just need to relax.”
 
 [[“Are you sure it’s not your hymen?”-&gt;Meaning]]
 
-“So what //is// your body count?”]&lt;nametag|
+“So have you //actually// had sex?”]&lt;nametag|
 
 
 (click: ?band1)[(replace: ?band1)[ [Figr lube?]&lt;band2|]]
 (click: ?band2)[(replace: ?band2)[ [Dame Alu lube?]&lt;band3|]]
 (click: ?band3)[(replace: ?band3)[ [olive oil?]&lt;band4|]]
 (click: ?band4)[(replace: ?band4)[ [oils? Only with like long term partners, of course.]&lt;band5|]]
-(click: ?band5)[(replace: ?band5)[ [Vush&#39;s lube?]&lt;band6|]]</tw-passagedata><tw-passagedata pid="23" name="Identity" tags="" position="22,357" size="100,100">//It was like some deep form of psychological torture
-To be so misidentified with yourself.
-
-I reached into my tight chest and pulled out my identity, which dripped and flailed like a loose and bloodied ribbon.
-Pinched between two fingers, I held it as far as I could from myself; the smell akin to that of a wet dog, of old seaweed washed up after a King Tide, while the sight of it, tangled round my wrists, made me feel that sickness that sinks right down to my knees. 
-
-What makes up an identity?
-</tw-passagedata><tw-passagedata pid="24" name="Causes" tags="" position="531,743" size="100,100">##ACTUAL CAUSES OF VAGINISMUS:
-
-&#39;&#39;Primary&#39;&#39;: when complete (painless) vaginal penetration has never been achieved
-
-&#39;&#39;Secondary&#39;&#39;: when penetration in the past has been achieved, but is no longer possible
-
+(click: ?band5)[(replace: ?band5)[ [Vush&#39;s lube?]&lt;band6|]]</tw-passagedata><tw-passagedata pid="23" name="Causes" tags="" position="494,727" size="100,100">(enchant: ?nametag&#39;s chars, via (t8n-delay:pos * 70) + (t8n:&#39;instant&#39;))
+##ACTUAL CAUSES OF VAGINISMUS:
 
 •	medical conditions such as recurrent urinary tract infections (UTIs), yeast infections (thrush), chronic pain syndromes or endometriosis
 
@@ -834,9 +1061,32 @@ What makes up an identity?
 
 •	previous sexual assault or rape
 
+* overstimulation of the pelvic floor due to over-exercise or bladder dysfunction 
 
 
-</tw-passagedata></tw-storydata>
+##Furthermore, there are TWO TYPES OF VAGINISMUS: 
+
+
+&#39;&#39;Primary&#39;&#39;: when complete (painless) vaginal penetration has never been achieved
+
+&#39;&#39;Secondary&#39;&#39;: when penetration in the past has been achieved, but is no longer possible
+
+Here are some excellent websites on Vaginismus AND Dyspareunia (Painful Sex)
+
+
+
+And just, //finally//, 
+It&#39;s really easy to fix. I swear.
+
+So this one is for my vaginismus sufferers &lt;3 (click-replace:&quot;So this one is for my vaginismus sufferers &lt;3&quot;) [
+My Mum sent me sunflowers because I was sad and she&#39;ll hate this story because she hates caterpillars but there was a caterpillar in one and instead of getting rid of it I left the sunflower in a vase on my desk and when I&#39;m lonely I talk to it and say, &#39;Hi Caterpillar&#39;, and it doesn&#39;t reply but I don&#39;t really mind. 
+By the time it turns into a butterfly, or maybe just a really, really, ugly moth (mouseover-replace: &quot;moth&quot;) [moth :( ], hopefully my unshelling will have finished. Hopefully I will be hurting less.
+Just because it&#39;s taken me an age, doesn&#39;t mean it has to take that long for anyone else. 
+You can find some really wonderful physios to help you out, and also Doctors are taking women a lot more seriously, especially with more people speaking out about this. 
+And for all my vagina owners who aren&#39;t women, or for women in women loving relationships, I understand that vaginismus doesn&#39;t mean or hurt less, just because it looks different. And there are so many Doctors who get that too. 
+So I implore you to speak up, because
+[[//Tomorrow, sex //will// be good again//.-&gt;Passage Image]] 
+]</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">"use strict";var _slicedToArray=function(){return function(e,t){if(Array.isArray(e))return e;if(Symbol.iterator in Object(e))return function(e,t){var n=[],r=!0,i=!1,a=void 0;try{for(var o,s=e[Symbol.iterator]();!(r=(o=s.next()).done)&&(n.push(o.value),!t||n.length!==t);r=!0);}catch(e){i=!0,a=e}finally{try{!r&&s.return&&s.return()}finally{if(i)throw a}}return n}(e,t);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function _defineProperty(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function _toConsumableArray(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)}!function(){
 /**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
